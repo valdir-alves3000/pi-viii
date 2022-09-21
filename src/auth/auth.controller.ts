@@ -15,8 +15,8 @@ import { AuthRequest } from './models/AuthRequest';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('login')
   @IsPublic()
+  @Post('login')
   @HttpCode(HttpStatus.OK)
   @UseGuards(LocalAuthGuard)
   login(@Request() req: AuthRequest) {
