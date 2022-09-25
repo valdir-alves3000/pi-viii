@@ -12,8 +12,24 @@ import { User } from './entities/user.entity';
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAllUsers(userCurrent: User) {
-    if (!userCurrent.admin) {
+  async findById(id: string) {
+    const user = this.prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phone: true,
+        updated_at: true,
+        locations: true,
+      },
+    });
+
+    return user;
+  }
+
+  async findAllUsers({ admin }: User) {
+    if (!admin) {
       throw new UnauthorizedException(
         'Restricted information for this type of user',
       );

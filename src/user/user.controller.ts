@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -18,5 +18,10 @@ export class UserController {
   @Get()
   async findAllUsers(@CurrentUser() user: User) {
     return this.userService.findAllUsers(user);
+  }
+
+  @Get(':id')
+  async findById(@Param('id') id: string) {
+    return this.userService.findById(id);
   }
 }

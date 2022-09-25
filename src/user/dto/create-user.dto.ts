@@ -1,5 +1,4 @@
 import {
-  IsBoolean,
   IsEmail,
   IsInt,
   IsString,
@@ -30,6 +29,5 @@ export class CreateUserDto extends User {
   @IsInt()
   cpf: string;
 
-  @IsBoolean()
   admin: boolean;
 }

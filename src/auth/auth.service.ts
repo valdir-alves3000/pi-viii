@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { compare } from 'bcrypt';
 import { User } from 'src/user/entities/user.entity';
@@ -43,6 +43,8 @@ export class AuthService {
       }
     }
 
-    throw new Error('Email address or password provided is incorrect!');
+    throw new BadRequestException(
+      'Email address or password provided is incorrect!',
+    );
   }
 }

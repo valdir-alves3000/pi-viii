@@ -4,6 +4,7 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const PORT = process.env.PORT || 3000;
 
   // Pipes
   app.useGlobalPipes(
@@ -14,6 +15,8 @@ async function bootstrap() {
     }),
   );
 
-  await app.listen(3000);
+  await app.listen(PORT, () =>
+    console.log(`Server is running in port: ${PORT}`),
+  );
 }
 bootstrap();
