@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '@prisma/client';
 import { compare } from 'bcrypt';
+import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
 import { UserPayload } from './models/UserPayload';
 import { UserToken } from './models/UserToken';
@@ -18,6 +18,8 @@ export class AuthService {
       sub: user.id,
       email: user.email,
       name: user.name,
+      phone: user.phone,
+      admin: user.admin,
     };
 
     const jwtToken = this.jwtService.sign(payload);

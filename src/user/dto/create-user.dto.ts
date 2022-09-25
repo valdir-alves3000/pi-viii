@@ -1,5 +1,7 @@
 import {
+  IsBoolean,
   IsEmail,
+  IsInt,
   IsString,
   Matches,
   MaxLength,
@@ -21,4 +23,13 @@ export class CreateUserDto extends User {
 
   @IsString()
   name: string;
+
+  @IsInt()
+  phone: string;
+
+  @IsInt()
+  cpf: string;
+
+  @IsBoolean()
+  admin: boolean;
 }
