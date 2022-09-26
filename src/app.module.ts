@@ -4,12 +4,13 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { LocationModule } from './location/location.module';
 import { PlaceModule } from './place/place.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
 
 @Module({
-  imports: [PrismaModule, UserModule, AuthModule, PlaceModule],
+  imports: [PrismaModule, UserModule, AuthModule, PlaceModule, LocationModule],
   controllers: [AppController],
   providers: [
     AppService,

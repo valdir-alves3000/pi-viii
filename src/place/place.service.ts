@@ -34,14 +34,10 @@ export class PlaceService {
   async findById(id: string, admin: boolean) {
     checkAdmin(admin);
 
-    const place = await this.prisma.place.findUnique({
-      where: {
-        id,
-      },
-    });
+    const place = await this.prisma.place.findUnique({ where: { id } });
 
     if (!place) {
-      throw new BadRequestException('Place not found');
+      throw new BadRequestException('Place not found!');
     }
 
     return place;
@@ -70,24 +66,16 @@ export class PlaceService {
   async remove(id: string, admin: boolean) {
     checkAdmin(admin);
 
-    const place = await this.prisma.place.findUnique({
-      where: {
-        id,
-      },
-    });
+    const place = await this.prisma.place.findUnique({ where: { id } });
 
     if (!place) {
       throw new BadRequestException('Place not found');
     }
 
-    await this.prisma.place.delete({
-      where: {
-        id,
-      },
-    });
+    await this.prisma.place.delete({ where: { id } });
 
     return {
-      message: 'User successfully deleted',
+      message: 'Place successfully deleted',
     };
   }
 }

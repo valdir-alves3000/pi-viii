@@ -4,6 +4,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { hash } from 'bcrypt';
+import { checkAdmin } from 'src/admin/check-admin';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
@@ -20,10 +21,22 @@ export class UserService {
         name: true,
         email: true,
         phone: true,
-        updated_at: true,
-        locations: true,
+        locations: {
+          select: {
+            id: true,
+            place_id: true,
+            created_at: true,
+          },
+          orderBy: {
+            created_at: 'desc',
+          },
+        },
       },
     });
+
+    if (!user) {
+      throw new BadRequestException('User not found!');
+    }
 
     return user;
   }
@@ -35,12 +48,25 @@ export class UserService {
       );
     }
     const users = await this.prisma.user.findMany({
+      orderBy: {
+        updated_at: 'desc',
+      },
       select: {
         id: true,
         name: true,
         email: true,
         phone: true,
         cpf: true,
+        locations: {
+          select: {
+            id: true,
+            place_id: true,
+            created_at: true,
+          },
+          orderBy: {
+            created_at: 'desc',
+          },
+        },
       },
     });
 
@@ -80,5 +106,21 @@ export class UserService {
 
   findByEmail(email: string) {
     return this.prisma.user.findUnique({ where: { email } });
+  }
+
+  async remove(id: string, admin: boolean) {
+    checkAdmin(admin);
+
+    const user = await this.prisma.user.findUnique({ where: { id } });
+
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    await this.prisma.user.delete({ where: { id } });
+
+    return {
+      message: 'User successfully deleted',
+    };
   }
 }

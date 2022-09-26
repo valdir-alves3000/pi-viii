@@ -31,7 +31,7 @@ export class PlaceController {
   }
 
   @Get(':id')
-  findOne(@CurrentUser() { admin }: User, @Param('id') id: string) {
+  findById(@CurrentUser() { admin }: User, @Param('id') id: string) {
     return this.placeService.findById(id, admin);
   }
 

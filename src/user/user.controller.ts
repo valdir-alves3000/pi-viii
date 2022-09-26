@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -20,8 +20,13 @@ export class UserController {
     return this.userService.findAllUsers(user);
   }
 
-  @Get(':id')
-  async findById(@Param('id') id: string) {
+  @Get('me')
+  async findById(@CurrentUser() { id }: User) {
     return this.userService.findById(id);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string, @CurrentUser() { admin }: User) {
+    return this.userService.remove(id, admin);
   }
 }
