@@ -13,22 +13,33 @@ import { User } from './entities/user.entity';
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findById(id: string) {
-    const user = this.prisma.user.findUnique({
-      where: { id },
+  async findByIdORCPF(id: string) {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        OR: [{ id }, { cpf: id }],
+      },
       select: {
         id: true,
         name: true,
         email: true,
         phone: true,
         locations: {
-          select: {
-            id: true,
-            place_id: true,
-            created_at: true,
-          },
           orderBy: {
             created_at: 'desc',
+          },
+          select: {
+            id: true,
+            created_at: true,
+
+            placeId: {
+              select: {
+                id: true,
+                name: true,
+                address: true,
+                city: true,
+                state: true,
+              },
+            },
           },
         },
       },
@@ -79,6 +90,7 @@ export class UserService {
         OR: [
           { email: createUserDto.email },
           { cpf: String(createUserDto.cpf) },
+          { phone: String(createUserDto.phone) },
         ],
       },
     });

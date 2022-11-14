@@ -7,8 +7,3 @@ export class User {
   cpf: string;
   admin: boolean;
 }
-
-export class Message {
-  phone: string;
-  date: Date;
-}

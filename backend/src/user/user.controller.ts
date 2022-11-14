@@ -20,9 +20,9 @@ export class UserController {
     return this.userService.findAllUsers(user);
   }
 
-  @Get('me')
-  async findById(@CurrentUser() { id }: User) {
-    return this.userService.findById(id);
+  @Get(':id')
+  async findByIdORCPF(@Param('id') cpf: string) {
+    return this.userService.findByIdORCPF(cpf);
   }
 
   @Delete(':id')
