@@ -38,8 +38,8 @@ model Place {
 }
 
 model Location {
-  id         String   @id @default(uuid())
-  created_at DateTime @default(now())
+  id         String @id @default(uuid())
+  created_at String
 
   userId   User   @relation(fields: [user_id], references: [id])
   placeId  Place  @relation(fields: [place_id], references: [id])
