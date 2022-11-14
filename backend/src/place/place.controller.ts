@@ -5,7 +5,7 @@ import {
   Get,
   Param,
   Patch,
-  Post,
+  Post
 } from '@nestjs/common';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { User } from 'src/user/entities/user.entity';

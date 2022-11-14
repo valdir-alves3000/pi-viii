@@ -10,6 +10,19 @@ export class PlaceService {
 
   async create({ address, city, name, state }: CreatePlaceDto, admin: boolean) {
     checkAdmin(admin);
+    const placeAlreadyExists = await this.prisma.place.findFirst({
+      where: {
+        AND: {
+          address,
+          city,
+          state,
+        },
+      },
+    });
+
+     if (placeAlreadyExists) {
+      throw new BadRequestException('Place already exists!');
+    }
 
     const place = await this.prisma.place.create({
       data: {
