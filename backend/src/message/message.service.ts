@@ -12,7 +12,7 @@ export class MessageService {
   checkPhoneNumber({ code, phone }: SecurityCode) {
     client.messages
       .create({
-        body: `Seu codigo de segurança para registrar seu telefone no sistema: \n *${code}*`,
+        body: `Ola, utilize o código *${code}* para acessar o sistema. \nNunca forneça esse numero a terceiros. Ele é pessoal e intransferivel.`,
         from: 'whatsapp:+14155238886',
         to: `whatsapp:+55${phone}`,
       })
@@ -20,14 +20,23 @@ export class MessageService {
       .done();
   }
 
-  createAlert({ address, city, date, name, phone, state }: CreateMessageDto) {
+  createAlert({
+    address,
+    city,
+    date,
+    name,
+    phone,
+    state,
+    user_name,
+  }: CreateMessageDto) {
     const message = `
-    O sistema notou pessoas infectadas no(a) *${name}* \n
-    Situado em *${city}/${state}* \n
-    Endereço: ${address} \n
-    no mesmo dia que você visitou o local ${date}. \n
-
-    *Nosso profissinal recomenda uma visita ao médico o mais rápido possível*.
+    Olá ${user_name}.
+    \nO sistema notou pessoas infectadas no local *${name}* 
+    \nSituado na cidade de *${city}-${state}* \nEndereço: ${address}. 
+    \nNo mesmo dia que você visitou o local *${new Date(
+      date,
+    ).toLocaleDateString()}*.
+    \n*Nosso profissinal recomenda uma visita ao médico o mais rápido possível*.
     `;
 
     client.messages

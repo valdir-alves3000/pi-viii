@@ -8,7 +8,6 @@ import { MessageService } from './message.service';
 export class MessageController {
   constructor(private readonly messageService: MessageService) {}
 
-  @IsPublic()
   @Post()
   createAlert(@Body() createMessageDto: CreateMessageDto) {
     return this.messageService.createAlert(createMessageDto);

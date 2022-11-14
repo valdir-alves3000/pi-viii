@@ -1,15 +1,13 @@
-import {
-  IsDateString,
-  IsMobilePhone,
-  IsString,
-  MaxLength,
-} from 'class-validator';
+import { IsMobilePhone, IsString, MaxLength } from 'class-validator';
 import { Message } from '../entities/message.entity';
 
 export class CreateMessageDto extends Message {
   @IsMobilePhone()
   @MaxLength(11)
   phone: string;
+
+  @IsString()
+  user_name: string;
 
   @IsString()
   address: string;
@@ -23,6 +21,6 @@ export class CreateMessageDto extends Message {
   @IsString()
   state: string;
 
-  @IsDateString()
+  @IsString()
   date: Date;
 }
