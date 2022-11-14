@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { CreateLocationDto } from './dto/create-location.dto';
@@ -27,7 +27,13 @@ export class LocationController {
   }
 
   @Get('place_id/:place_id')
-  findByPlaceId(@Param('place_id') place_id: string) {
-    return this.locationService.findByPlaceId(place_id);
+  findByPlaceId(
+    @Param('place_id') place_id: string,
+    @Query('day') day: string,
+    @Query('month') month: string,
+    @Query('year') year: string,
+  ) {
+    const date = `${day} ${month} ${year}`;
+    return this.locationService.findByPlaceId(place_id, date);
   }
 }

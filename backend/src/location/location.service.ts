@@ -6,10 +6,13 @@ export class LocationService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(place_id: string, user_id: string) {
+    const created_at = String(new Date(Date.now()).toUTCString());
+
     const location = await this.prisma.location.create({
       data: {
         place_id,
         user_id,
+        created_at,
       },
     });
 
@@ -32,11 +35,38 @@ export class LocationService {
     return location;
   }
 
-  async findByPlaceId(place_id: string) {
+  async findByPlaceId(place_id: string, date: string) {
     const locations = await this.prisma.location.findMany({
-      where: { place_id },
+      where: {
+        AND: [
+          { place_id },
+          {
+            created_at: {
+              contains: date,
+            },
+          },
+        ],
+      },
       orderBy: {
         created_at: 'desc',
+      },
+      select: {
+        created_at: true,
+        userId: {
+          select: {
+            name: true,
+            phone: true,
+            email: true,
+          },
+        },
+        placeId: {
+          select: {
+            name: true,
+            address: true,
+            city: true,
+            state: true,
+          },
+        },
       },
     });
 
