@@ -31,7 +31,7 @@ export interface TextInputInputProps
 function TextInputInput(props: TextInputInputProps) {
   return (
     <input
-      className="bg-transparent flex-1 text-gray-200 outline-none text-md placeholder:text-gray-400 focus:text-gray-800"
+      className="bg-transparent flex-1 text-gray-400 outline-none text-md placeholder:text-gray-400 focus:text-gray-800"
       {...props}
     />
   );

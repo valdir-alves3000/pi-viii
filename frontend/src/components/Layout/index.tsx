@@ -1,6 +1,6 @@
 import { ReactNode, useState } from "react";
-import { Footer } from "../Footer";
-import { Header } from "../Header";
+import { Footer } from "./Footer";
+import { Header } from "./Header";
 
 interface LayoutProps {
   children: ReactNode;
@@ -12,7 +12,7 @@ export function Layout({ children }: LayoutProps) {
   return (
     <>
       <Header />
-      <main className="w-full min-h-[75vh] flex flex-col items-center justify-center lg:flex-row ">
+      <main className="w-full min-h-[71vh] flex flex-col items-center justify-center lg:flex-row ">
         {children}
       </main>
       <Footer />
