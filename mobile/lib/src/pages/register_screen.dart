@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/src/blocs/auth_bloc.dart';
 import 'package:mobile/src/resources/dialog/loading_dialog.dart';
 import 'package:mobile/src/resources/dialog/msg_dialog.dart';
+import 'package:validatorless/validatorless.dart';
 
 class RegisterScreen extends StatefulWidget {
   static const String idPage = '/register';
@@ -15,13 +16,25 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final AuthBloc authBloc = AuthBloc();
+  final _formKey = GlobalKey<FormState>();
+  final authBloc = AuthBloc();
 
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _cpfController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _cpfController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _passController.dispose();
+    _phoneController.dispose();
+    _cpfController.dispose();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,201 +66,194 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   style: TextStyle(fontSize: 22, color: Colors.white70),
                 ),
               ),
-              Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 40, 0, 0),
-                  child: StreamBuilder(
-                      stream: authBloc.nameStream,
-                      builder: (context, snapshot) => TextField(
-                            controller: _nameController,
-                            style: const TextStyle(
-                                fontSize: 16, color: Colors.white70),
-                            decoration: InputDecoration(
-                              enabledBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.white54,
-                                ),
-                              ),
-                              focusedBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.blue,
-                                ),
-                              ),
-                              labelText: "Name",
-                              labelStyle: const TextStyle(
-                                color: Colors.white54,
-                                fontStyle: FontStyle.italic,
-                              ),
-                              prefixIcon: const Icon(
-                                Icons.people,
-                                color: Colors.white54,
-                              ),
-                              border: const OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(6),
-                                ),
-                              ),
-                              errorText: snapshot.hasError
-                                  ? snapshot.error.toString()
-                                  : null,
-                            ),
-                          ))),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                child: StreamBuilder(
-                    stream: authBloc.phoneStream,
-                    builder: (context, snapshot) => TextField(
-                          controller: _phoneController,
-                          style: const TextStyle(
-                              fontSize: 16, color: Colors.white70),
-                          decoration: InputDecoration(
-                            enabledBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.white54,
-                              ),
-                            ),
-                            focusedBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.blue,
-                              ),
-                            ),
-                            labelText: "Phone",
-                            labelStyle: const TextStyle(
-                              color: Colors.white54,
-                              fontStyle: FontStyle.italic,
-                            ),
-                            prefixIcon: const Icon(
-                              Icons.phone_android,
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 50, 0, 12),
+                      child: TextFormField(
+                        controller: _nameController,
+                        validator: Validatorless.required("Nome Obrigatório"),
+                        style: const TextStyle(
+                            fontSize: 16, color: Colors.white70),
+                        decoration: const InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
                               color: Colors.white54,
                             ),
-                            border: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(6),
-                              ),
-                            ),
-                            errorText: snapshot.hasError
-                                ? snapshot.error.toString()
-                                : null,
                           ),
-                        )),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                child: StreamBuilder(
-                    stream: authBloc.emailStream,
-                    builder: (context, snapshot) => TextField(
-                          controller: _emailController,
-                          style: const TextStyle(
-                              fontSize: 16, color: Colors.white70),
-                          decoration: InputDecoration(
-                            enabledBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.white54,
-                              ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.blue,
                             ),
-                            focusedBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.blue,
-                              ),
-                            ),
-                            labelText: "Email",
-                            labelStyle: const TextStyle(
-                              color: Colors.white54,
-                              fontStyle: FontStyle.italic,
-                            ),
-                            prefixIcon: const Icon(
-                              Icons.email_outlined,
-                              color: Colors.white54,
-                            ),
-                            border: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(6),
-                              ),
-                            ),
-                            errorText: snapshot.hasError
-                                ? snapshot.error.toString()
-                                : null,
                           ),
-                        )),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                child: StreamBuilder(
-                    stream: authBloc.passStream,
-                    builder: (context, snapshot) => TextField(
-                          controller: _passController,
-                          obscureText: true,
-                          style: const TextStyle(
-                              fontSize: 16, color: Colors.white70),
-                          decoration: InputDecoration(
-                            enabledBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.white54,
-                              ),
-                            ),
-                            focusedBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.blue,
-                              ),
-                            ),
-                            labelText: "Password",
-                            labelStyle: const TextStyle(
-                              color: Colors.white54,
-                              fontStyle: FontStyle.italic,
-                            ),
-                            prefixIcon: const Icon(
-                              Icons.lock_outline,
-                              color: Colors.white54,
-                            ),
-                            border: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(6),
-                              ),
-                            ),
-                            errorText: snapshot.hasError
-                                ? snapshot.error.toString()
-                                : null,
+                          labelText: "Name",
+                          labelStyle: TextStyle(
+                            color: Colors.white54,
+                            fontStyle: FontStyle.italic,
                           ),
-                        )),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                child: StreamBuilder(
-                    stream: authBloc.cpfStream,
-                    builder: (context, snapshot) => TextField(
-                          controller: _cpfController,
-                          obscureText: true,
-                          style: const TextStyle(
-                              fontSize: 16, color: Colors.white70),
-                          decoration: InputDecoration(
-                            enabledBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.white54,
-                              ),
-                            ),
-                            focusedBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.blue,
-                              ),
-                            ),
-                            labelText: "CPF",
-                            labelStyle: const TextStyle(
-                              color: Colors.white54,
-                              fontStyle: FontStyle.italic,
-                            ),
-                            prefixIcon: const Icon(
-                              Icons.crop_landscape_sharp,
-                              color: Colors.white54,
-                            ),
-                            border: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(6),
-                              ),
-                            ),
-                            errorText: snapshot.hasError
-                                ? snapshot.error.toString()
-                                : null,
+                          prefixIcon: Icon(
+                            Icons.people,
+                            color: Colors.white54,
                           ),
-                        )),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(6),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    TextFormField(
+                      controller: _emailController,
+                      validator: Validatorless.multiple([
+                        Validatorless.required("E-mail Obrigatório"),
+                        Validatorless.email("E-mail inválido"),
+                      ]),
+                      style:
+                          const TextStyle(fontSize: 18, color: Colors.white70),
+                      decoration: const InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.white54,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.blue,
+                          ),
+                        ),
+                        labelText: "E-mail",
+                        labelStyle: TextStyle(
+                          color: Colors.white54,
+                          fontStyle: FontStyle.italic,
+                        ),
+                        prefixIcon: Icon(
+                          Icons.email_outlined,
+                          color: Colors.white54,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(6),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
+                      child: TextFormField(
+                        controller: _passController,
+                        validator: Validatorless.multiple([
+                          Validatorless.required("Senha Obrigatória"),
+                          Validatorless.min(
+                              6, "A senha deve ter pelo menos 6 caracteres"),
+                        ]),
+                        style: const TextStyle(
+                            fontSize: 18, color: Colors.white70),
+                        decoration: const InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.white54,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.blue,
+                            ),
+                          ),
+                          labelText: "Password",
+                          labelStyle: TextStyle(
+                            color: Colors.white54,
+                            fontStyle: FontStyle.italic,
+                          ),
+                          prefixIcon: Icon(
+                            Icons.lock_outline,
+                            color: Colors.white54,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(6),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    TextFormField(
+                      controller: _phoneController,
+                      validator: Validatorless.multiple([
+                        Validatorless.required("Telefone Obrigatório"),
+                        Validatorless.number("Apenas números por favor")
+                      ]),
+                      style:
+                          const TextStyle(fontSize: 16, color: Colors.white70),
+                      decoration: const InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.white54,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.blue,
+                          ),
+                        ),
+                        labelText: "Phone",
+                        labelStyle: TextStyle(
+                          color: Colors.white54,
+                          fontStyle: FontStyle.italic,
+                        ),
+                        prefixIcon: Icon(
+                          Icons.phone_android,
+                          color: Colors.white54,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(6),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
+                      child: TextFormField(
+                        controller: _cpfController,
+                        validator: Validatorless.multiple([
+                          Validatorless.required("CPF Obrigatório"),
+                          Validatorless.number('CPF inválido'),
+                        ]),
+                        style: const TextStyle(
+                            fontSize: 18, color: Colors.white70),
+                        decoration: const InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.white54,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.blue,
+                            ),
+                          ),
+                          labelText: "CPF",
+                          labelStyle: TextStyle(
+                            color: Colors.white54,
+                            fontStyle: FontStyle.italic,
+                          ),
+                          prefixIcon: Icon(
+                            Icons.crop_landscape_sharp,
+                            color: Colors.white54,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(6),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 30, 0, 40),
@@ -312,7 +318,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     String pass = _passController.text;
     String cpf = _cpfController.text;
 
-    var isValid = authBloc.isValid(name, email, pass, phone, cpf);
+    var isValid = _formKey.currentState?.validate() ?? false;
 
     if (isValid) {
       LoadingDialog.showLoadingDialog(context, 'Loading...');

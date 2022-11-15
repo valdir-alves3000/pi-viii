@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/src/blocs/auth_bloc.dart';
 import 'package:mobile/src/resources/dialog/loading_dialog.dart';
 import 'package:mobile/src/resources/dialog/msg_dialog.dart';
+import 'package:validatorless/validatorless.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String idPage = '/';
@@ -13,9 +14,18 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final AuthBloc authBloc = AuthBloc();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  final authBloc = AuthBloc();
+  final _emailController = TextEditingController();
+  final _passController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passController.dispose();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,82 +62,85 @@ class _LoginScreenState extends State<LoginScreen> {
                 "Faça login para acessar o sistema.",
                 style: TextStyle(fontSize: 16, color: Colors.white54),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
-                child: StreamBuilder(
-                    stream: authBloc.emailStream,
-                    builder: (context, snapshot) => TextField(
-                          controller: _emailController,
-                          style: const TextStyle(
-                              fontSize: 18, color: Colors.white70),
-                          decoration: InputDecoration(
-                            enabledBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.white54,
-                              ),
-                            ),
-                            focusedBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.blue,
-                              ),
-                            ),
-                            labelText: "Email",
-                            labelStyle: const TextStyle(
-                              color: Colors.white54,
-                              fontStyle: FontStyle.italic,
-                            ),
-                            prefixIcon: const Icon(
-                              Icons.email_outlined,
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 50, 0, 12),
+                      child: TextFormField(
+                        controller: _emailController,
+                        validator: Validatorless.multiple([
+                          Validatorless.required("E-mail Obrigatório"),
+                          Validatorless.email("E-mail inválido"),
+                        ]),
+                        style: const TextStyle(
+                            fontSize: 18, color: Colors.white70),
+                        decoration: const InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
                               color: Colors.white54,
                             ),
-                            border: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(6),
-                              ),
-                            ),
-                            errorText: snapshot.hasError
-                                ? snapshot.error.toString()
-                                : null,
                           ),
-                        )),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                child: StreamBuilder(
-                  stream: authBloc.passStream,
-                  builder: (context, snapshot) => TextField(
-                    controller: _passController,
-                    style: const TextStyle(fontSize: 18, color: Colors.white70),
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      enabledBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.blue,
+                            ),
+                          ),
+                          labelText: "E-mail",
+                          labelStyle: TextStyle(
+                            color: Colors.white54,
+                            fontStyle: FontStyle.italic,
+                          ),
+                          prefixIcon: Icon(
+                            Icons.email_outlined,
+                            color: Colors.white54,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(6),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    TextFormField(
+                      controller: _passController,
+                      validator: Validatorless.multiple([
+                        Validatorless.required("Senha Obrigatória"),
+                        Validatorless.min(
+                            6, "A senha deve ter pelo menos 6 caracteres"),
+                      ]),
+                      style:
+                          const TextStyle(fontSize: 18, color: Colors.white70),
+                      decoration: const InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.white54,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.blue,
+                          ),
+                        ),
+                        labelText: "Password",
+                        labelStyle: TextStyle(
+                          color: Colors.white54,
+                          fontStyle: FontStyle.italic,
+                        ),
+                        prefixIcon: Icon(
+                          Icons.lock_outline,
                           color: Colors.white54,
                         ),
-                      ),
-                      focusedBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.blue,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(6),
+                          ),
                         ),
                       ),
-                      labelText: "Password",
-                      labelStyle: const TextStyle(
-                        color: Colors.white54,
-                        fontStyle: FontStyle.italic,
-                      ),
-                      prefixIcon: const Icon(
-                        Icons.lock_outlined,
-                        color: Colors.white54,
-                      ),
-                      border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(6),
-                        ),
-                      ),
-                      errorText:
-                          snapshot.hasError ? snapshot.error.toString() : null,
                     ),
-                  ),
+                  ],
                 ),
               ),
               Padding(
@@ -188,7 +201,7 @@ class _LoginScreenState extends State<LoginScreen> {
     String email = _emailController.text;
     String pass = _passController.text;
 
-    var isValid = authBloc.isValid('login', email, pass, 'login', 'login');
+    var isValid = _formKey.currentState?.validate() ?? false;
 
     if (isValid) {
       LoadingDialog.showLoadingDialog(context, "Loading...");
