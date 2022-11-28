@@ -1,3 +1,5 @@
+# Protection Of Good
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
@@ -19,17 +21,25 @@
     <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
   <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
 </p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Este Projeto busca contribuir com o controle de casos de pessoas infectadas por doenças contagiosas.
+
+Por meio de registro de localizações dos usuários. No intuito de notificalos em casos de contato com pessoas contaminadas.
 
 ## Installation
 
 ```bash
+# Clone este repositório
+$ git clone https://github.com/valdir-alves3000/pi-viii/.git
+
+# Acesse a pasta do projeto no terminal/cmd
+$ cd /pi-viii/backend
+
+# Instale as dependências
 $ npm install
+
 ```
 
 ## Running the app
@@ -38,6 +48,8 @@ $ npm install
 # development
 $ npm run start
 
+# O servidor inciará na porta:3333 - acesse <http://localhost:3333>
+
 # watch mode
 $ npm run start:dev
 
@@ -45,29 +57,101 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## Test
+## Technologies
 
-```bash
-# unit tests
-$ npm run test
+- [Bcryptjs](https://www.npmjs.com/package/bcryptjs)
+- [Class Transformer](https://github.com/typestack/class-transformer#readme)
+- [JsonWebToken](https://jwt.io/introduction)
+- [Node Js](https://nodejs.org/en/)
+- [Nest Js](https://docs.nestjs.com/)
+- [Reflect-Metadata](https://www.npmjs.com/package/reflect-metadata)
+- [Prisma](https://www.prisma.io/)
+- [Class Validator](https://www.npmjs.com/package/class-validator)
+- [Twilio](https://www.twilio.com/pt-br/docs/whatsapp)
 
-# e2e tests
-$ npm run test:e2e
+## Endpoints
 
-# test coverage
-$ npm run test:cov
-```
+**_GET_** /users
 
-## Support
+Retorna uma lista com todos usuários cadastrados.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+##### Exemplo
 
-## Stay in touch
+---
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+    http://localhost:3333/
+
+---
+
+**_POST_** /users
+
+Cria um novo usuário no banco de dados. Todos os campos são obrigatórios
+
+##### Exemplo
+
+---
+
+    body {
+        email: 'author@email.com',
+        name: 'Nome do usuário',
+        password: 'Senha do usuário',
+        phone: 'Telefone do usuário',
+        cpf: 'CPF do usuário'
+    }
+
+---
+
+**_POST_** /places
+
+Cria um novo local no banco de dados. Todos os campos são obrigatórios
+
+##### Exemplo
+
+---
+
+    body {
+        name: 'Nome do Local',
+        address: 'Endereço do Local',
+        city: 'Cidade',
+        state: 'Estado'
+    }
+
+---
+
+**_POST_** /locations/place_id/:place_id
+
+Registra a localização do usuário
+
+##### Exemplo
+
+---
+
+    body {
+        place_id: 'ID do local'
+    }
+
+---
+
+**_POST_** /message
+
+Envia uma notificação para o usuário
+
+##### Exemplo
+
+---
+
+    body {
+        phone: 'Telefone do usuário',
+        user_name: 'Nome do usuário,
+        name: 'Nome do Local',
+        address: 'Endereço do Local',
+        city: 'Cidade',
+        state: 'Estado',
+        date: 'Data da Localização'
+    }
+
+---
 
 ## License
 
-Nest is [MIT licensed](LICENSE).
+Nest is [MIT licensed](LICENSE)
