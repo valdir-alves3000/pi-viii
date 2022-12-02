@@ -7,7 +7,7 @@ class LoadingDialog {
       barrierDismissible: false,
       builder: (context) => Dialog(
         child: Container(
-          color: Theme.of(context).backgroundColor,
+          color: Theme.of(context).primaryColorDark,
           height: 100,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
