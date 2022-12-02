@@ -1,73 +1,33 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:mobile/src/controller/locations_controller.dart';
+import 'package:mobile/src/model/location_model.dart';
 
 class LocationsScreen extends StatelessWidget {
   static const String idPage = '/locations';
   DateTime data = DateTime.now();
 
-  var locations = [
-    {
-      "date": "14/11/2022",
-      "name": "Padaria do Bahia",
-      "address": "Rua da Paz",
-      "city": "Mauá",
-      "state": "SP"
-    },
-    {
-      "date": "20/10/2022",
-      "name": "Padaria do Jota",
-      "address": "Rua sem saída",
-      "city": "Mauá",
-      "state": "SP"
-    },
-    {
-      "date": "20/10/2022",
-      "name": "Bar do Zica",
-      "address": "Rua sem saída",
-      "city": "Ribeirão",
-      "state": "PB"
-    },
-    {
-      "date": "03/10/2022",
-      "name": "Pizzaria Dono do Queijo",
-      "address": "Rua da massa",
-      "city": "São Mateus",
-      "state": "CE"
-    },
-    {
-      "date": "01/10/2022",
-      "name": "Bar do Zica",
-      "address": "Rua sem saída",
-      "city": "Mauá",
-      "state": "SP"
-    },
-    {
-      "date": "16/09/2022",
-      "name": "Praia do tombo",
-      "address": "Ilha Bela",
-      "city": "Rio de Janeiro",
-      "state": "RJ"
-    },
-  ];
+  LocationsController locationsController = Get.put(LocationsController());
 
-  LocationsScreen() {
-    // categoria = List.generate(10, (i) => "Categoria $i");
-    // items = List.generate(5, (i) => "Item $i");
-  }
+  late List<LocationModel> locations = locationsController.locations;
+
+  LocationsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
       child: Container(
-        color: Theme.of(context).backgroundColor,
+        color: Theme.of(context).primaryColorDark,
         child: CustomScrollView(
           slivers: <Widget>[
             SliverAppBar(
               pinned: true,
               expandedHeight: 200,
-              backgroundColor: Theme.of(context).backgroundColor,
+              backgroundColor: Theme.of(context).primaryColorDark,
               flexibleSpace: FlexibleSpaceBar(
                 title: const Text(
                   "Protection Of Good",
@@ -102,36 +62,104 @@ class LocationsScreen extends StatelessWidget {
                                 itemCount: locations.length,
                                 itemBuilder: (_, index) {
                                   var item = locations[index];
-                                  var date = item['date'];
+                                  var initialMoth = DateFormat.MMMM()
+                                      .format(DateTime.parse(
+                                          locations[0].created_at))
+                                      .toUpperCase()
+                                      .toString();
+
+                                  var month = DateFormat.MMMM()
+                                      .format(DateTime.parse(item.created_at))
+                                      .toUpperCase()
+                                      .toString();
+
+                                  var lastMonth = index > 0
+                                      ? DateFormat.MMMM()
+                                          .format(DateTime.parse(
+                                              locations[index - 1].created_at))
+                                          .toUpperCase()
+                                          .toString()
+                                      : initialMoth;
 
                                   return Column(
                                     children: [
                                       ListTile(
                                         title: Column(
                                           children: [
-                                            Text(
-                                              item['date']!,
-                                              style: const TextStyle(
-                                                  color: Colors.white70),
-                                            ),
+                                            index == 0
+                                                ? Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Text(
+                                                      initialMoth,
+                                                      style: const TextStyle(
+                                                        color: Colors.blueGrey,
+                                                        fontSize: 22,
+                                                        letterSpacing: 2,
+                                                      ),
+                                                    ),
+                                                  )
+                                                : const SizedBox(),
+                                            index > 0 && month != lastMonth
+                                                ? Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Text(
+                                                      month,
+                                                      style: const TextStyle(
+                                                          color:
+                                                              Colors.blueGrey,
+                                                          fontSize: 22,
+                                                          letterSpacing: 2),
+                                                    ),
+                                                  )
+                                                : const SizedBox(),
                                           ],
+                                        ),
+                                        leading: Text(
+                                          DateFormat.d().format(
+                                              DateTime.parse(item.created_at)),
+                                          style: const TextStyle(
+                                            color: Colors.blueGrey,
+                                            fontSize: 22,
+                                          ),
                                         ),
                                         subtitle: Column(
                                           children: [
                                             Text(
-                                              item['address']!,
+                                              item.name,
                                               style: const TextStyle(
-                                                  color: Colors.white38),
+                                                  color: Colors.white38,
+                                                  fontSize: 16,
+                                                  letterSpacing: 1),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(4.0),
+                                              child: Text(
+                                                item.address,
+                                                style: const TextStyle(
+                                                    color: Colors.white38,
+                                                    fontSize: 16,
+                                                    letterSpacing: 1),
+                                              ),
                                             ),
                                             Text(
-                                              item['city']!,
+                                              item.city,
                                               style: const TextStyle(
-                                                  color: Colors.white38),
+                                                  color: Colors.white38,
+                                                  fontSize: 16,
+                                                  letterSpacing: 1),
                                             ),
+                                            const SizedBox(height: 8),
                                             Text(
-                                              item['name']!,
+                                              item.state,
                                               style: const TextStyle(
-                                                  color: Colors.white38),
+                                                  color: Colors.white38,
+                                                  fontSize: 16,
+                                                  letterSpacing: 1),
                                             ),
                                           ],
                                         ),
