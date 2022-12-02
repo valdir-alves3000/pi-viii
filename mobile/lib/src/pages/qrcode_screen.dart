@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:mobile/src/resources/dialog/msg_create_user.dart';
+import 'package:mobile/src/resources/dialog/msg_dialog.dart';
+import 'package:mobile/src/services/api_service.dart';
 
 class QRCodeScreen extends StatefulWidget {
   static const String idPage = '/qrcode';
@@ -12,7 +14,7 @@ class QRCodeScreen extends StatefulWidget {
 }
 
 class _QRCodeScreenState extends State<QRCodeScreen> {
-  var getResult = '';
+  final ApiService apiService = ApiService.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +44,7 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
           ),
           ElevatedButton(
             onPressed: () async {
+              await apiService.GetMyRecords();
               Navigator.pushNamed(context, '/locations');
             },
             style: ElevatedButton.styleFrom(
@@ -82,7 +85,7 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
             ),
           ),
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               scanQRCode();
             },
             style: ElevatedButton.styleFrom(
@@ -114,7 +117,6 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
           const SizedBox(
             height: 20.0,
           ),
-          Text(getResult),
         ],
       )),
     );
@@ -127,16 +129,19 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
 
       if (!mounted) return;
 
-      setState(() {
-        getResult = qrCode;
-      });
+      apiService.GetPlace(qrCode).asStream().listen((place) async {
+        if (place != null) {
+          MsgCreateLocation.showMsgDialog(context, place.name, place.address,
+              place.city, place.state, place.created_at, place.id);
+          return;
+        }
 
-      MsgCreateLocation.showMsgDialog(context, "Padaria do Bahia", "Rua da Paz",
-          "Mauá", "SP", "10/11/2022");
-      // print("QRCode_Result:--");
-      // print(qrCode);
+        MsgDialog.showMsgDialog(
+            context, "Falha na Leitura", "QRCode não localizado", false);
+      });
     } on PlatformException {
-      getResult = 'Failed to scan QR Code.';
+      MsgDialog.showMsgDialog(
+          context, "Falha na Leitura", "QRCode não localizado", false);
     }
   }
 }
