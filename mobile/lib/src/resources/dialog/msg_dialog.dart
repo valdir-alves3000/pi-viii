@@ -25,23 +25,35 @@ class MsgDialog {
         ),
         actions: [
           Center(
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop(MsgDialog);
-              },
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  elevation: 3,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6)),
-                  textStyle: const TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
-                  )),
-              child: const Text(
-                "OK",
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.blue),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 12),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop(MsgDialog);
+                },
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).primaryColor,
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6)),
+                    textStyle: const TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                    )),
+                child: const SizedBox(
+                  width: 80,
+                  height: 40,
+                  child: Center(
+                    child: Text(
+                      "OK",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ),
           ),

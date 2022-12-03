@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mobile/src/resources/dialog/msg_dialog.dart';
+import 'package:mobile/src/services/api_service.dart';
 
 class MsgCreateLocation {
   static void showMsgDialog(BuildContext context, String name, String address,
-      String city, String state, String date) {
+      String city, String state, String date, String id) {
+    final ApiService apiService = ApiService.instance;
+
     double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height / 3;
+    double height = 180;
 
     showDialog(
       context: context,
@@ -15,7 +19,11 @@ class MsgCreateLocation {
             child: Text(
           "Registrar Localização",
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 24, color: Colors.white70),
+          style: TextStyle(
+            fontSize: 24,
+            color: Colors.blueGrey,
+            fontWeight: FontWeight.w600,
+          ),
         )),
         content: SizedBox(
           width: width,
@@ -33,11 +41,11 @@ class MsgCreateLocation {
                     "Data: ",
                     style: TextStyle(
                         fontSize: 18,
-                        color: Colors.white60,
+                        color: Colors.blueGrey,
                         fontWeight: FontWeight.w600),
                   ),
                   Text(
-                    date,
+                    DateFormat.yMMMEd().format(DateTime.parse(date)),
                     style: const TextStyle(
                       fontSize: 16,
                       color: Colors.white60,
@@ -54,7 +62,7 @@ class MsgCreateLocation {
                     "Local: ",
                     style: TextStyle(
                         fontSize: 18,
-                        color: Colors.white60,
+                        color: Colors.blueGrey,
                         fontWeight: FontWeight.w600),
                   ),
                   Text(
@@ -75,7 +83,7 @@ class MsgCreateLocation {
                     "Endereço: ",
                     style: TextStyle(
                         fontSize: 18,
-                        color: Colors.white60,
+                        color: Colors.blueGrey,
                         fontWeight: FontWeight.w600),
                   ),
                   Text(
@@ -96,7 +104,7 @@ class MsgCreateLocation {
                     "Cidade: ",
                     style: TextStyle(
                         fontSize: 18,
-                        color: Colors.white60,
+                        color: Colors.blueGrey,
                         fontWeight: FontWeight.w600),
                   ),
                   Text(
@@ -117,7 +125,7 @@ class MsgCreateLocation {
                     "Estado: ",
                     style: TextStyle(
                         fontSize: 18,
-                        color: Colors.white60,
+                        color: Colors.blueGrey,
                         fontWeight: FontWeight.w600),
                   ),
                   Text(
@@ -133,53 +141,86 @@ class MsgCreateLocation {
           ),
         ),
         actions: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop(MsgCreateLocation);
-                },
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).primaryColor,
-                    elevation: 3,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(6)),
-                    textStyle: const TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
-                    )),
-                child: const Text(
-                  "Cancelar",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.blue,
+          Padding(
+            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(MsgCreateLocation);
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).primaryColor,
+                      elevation: 3,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6)),
+                      textStyle: const TextStyle(
+                        fontSize: 18,
+                        color: Colors.white,
+                      )),
+                  child: const SizedBox(
+                    height: 52,
+                    width: 100,
+                    child: Center(
+                      child: Text(
+                        "Cancelar",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop(MsgCreateLocation);
-                  MsgDialog.showMsgDialog(context, "Localização Registrada",
-                      "Sua localização foi resgistrar com sucesso.", true);
-                },
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).primaryColor,
-                    elevation: 3,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(6)),
-                    textStyle: const TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
-                    )),
-                child: const Text(
-                  "Registrar",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 18, color: Colors.blue),
+                ElevatedButton(
+                  onPressed: () async {
+                    apiService.PostLocations(id).asStream().listen((res) {
+                      if (res != null) {
+                        Navigator.of(context).pop(MsgCreateLocation);
+
+                        return MsgDialog.showMsgDialog(
+                            context,
+                            "Localização Registrada",
+                            "Sua localização foi resgistrar com sucesso.",
+                            true);
+                      }
+                      Navigator.of(context).pop(MsgCreateLocation);
+
+                      MsgDialog.showMsgDialog(
+                          context,
+                          "Falha no Registro",
+                          "Não foi possível resgistrar sua localização.",
+                          false);
+                    });
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).primaryColor,
+                      elevation: 3,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6)),
+                      textStyle: const TextStyle(
+                        color: Colors.blue,
+                        fontSize: 20,
+                      )),
+                  child: const SizedBox(
+                    height: 52,
+                    width: 100,
+                    child: Center(
+                      child: Text(
+                        "Registrar",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           const SizedBox(height: 20)
         ],
