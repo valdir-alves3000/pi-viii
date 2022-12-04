@@ -48,7 +48,7 @@ export function Home() {
   return (
     <Layout>
       <img
-        src="./virus_mask.jpg"
+        src="https://raw.githubusercontent.com/valdir-alves3000/pi-viii/main/frontend/public/virus_mask.jpg"
         className="rounded-full w-56 mt-10 opacity-40 border border-blue-400 lg:w-96 lg:mr-16"
       />
 
