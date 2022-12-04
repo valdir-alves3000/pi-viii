@@ -5,5 +5,5 @@ export class User {
   name: string;
   phone: string;
   cpf: string;
-  admin: boolean;
+  admin?: boolean;
 }

@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -23,6 +31,11 @@ export class UserController {
   @Get(':id')
   async findByIdORCPF(@Param('id') cpf: string) {
     return this.userService.findByIdORCPF(cpf);
+  }
+
+  @Patch('/turn-admin/:id')
+  async update(@Param('id') id: string, @CurrentUser() { admin }: User) {
+    return this.userService.turnAdmin(id, admin);
   }
 
   @Delete(':id')

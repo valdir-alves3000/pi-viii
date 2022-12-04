@@ -13,6 +13,36 @@ import { User } from './entities/user.entity';
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
+  async turnAdmin(id: string, admin: boolean) {
+    checkAdmin(admin);
+
+    const userCurrent = await this.prisma.user.findUnique({ where: { id } });
+
+    if (!userCurrent) {
+      throw new BadRequestException('User not found!');
+    }
+
+    const user = await this.prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        admin: true,
+      },
+      select: {
+        name: true,
+        email: true,
+        admin: true,
+      },
+    });
+
+    if (!user) {
+      throw new BadRequestException('User not found!');
+    }
+
+    return user;
+  }
+
   async findByIdORCPF(id: string) {
     const user = await this.prisma.user.findFirst({
       where: {
