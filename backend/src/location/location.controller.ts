@@ -16,6 +16,11 @@ export class LocationController {
     return this.locationService.create(place_id, id);
   }
 
+  @Get('my/records')
+  findMyAll(@CurrentUser() { id }: User) {
+    return this.locationService.findMyAll(id);
+  }
+
   @Get()
   findAll() {
     return this.locationService.findAll();

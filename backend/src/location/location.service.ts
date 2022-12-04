@@ -19,6 +19,52 @@ export class LocationService {
     return location;
   }
 
+  async findMyAll(id: string) {
+    const locations = await this.prisma.user.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        locations: {
+          orderBy: {
+            created_at: 'desc',
+          },
+          select: {
+            id: true,
+            created_at: true,
+
+            placeId: {
+              select: {
+                id: true,
+                name: true,
+                address: true,
+                city: true,
+                state: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!locations) {
+      throw new BadRequestException('Location not found!');
+    }
+
+    const res = locations.locations.map((location) => {
+      return {
+        id: location.id,
+        name: location.placeId.name,
+        address: location.placeId.address,
+        city: location.placeId.city,
+        state: location.placeId.state,
+        created_at: new Date(location.created_at),
+      };
+    });
+
+    return res;
+  }
+
   async findAll() {
     const locations = await this.prisma.location.findMany();
 
