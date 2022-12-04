@@ -38,7 +38,7 @@ export function Login() {
   return (
     <Layout>
       <img
-        src="src/assets/virus_mask.jpg"
+        src="/virus_mask.jpg"
         className="rounded-full w-56 mt-10 opacity-40 border border-blue-400 lg:w-96 lg:mr-16"
       />
 
