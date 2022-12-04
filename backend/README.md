@@ -57,7 +57,19 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## Technologies
+## Variáveis de Ambiente
+
+Para rodar esse projeto, você vai precisar adicionar as seguintes variáveis de ambiente no seu .env
+
+`DATABASE_URL`
+
+`TWILIO_ID`
+
+`TWILIO_AUTHTOKEN`
+
+`JWT_SECRET`
+
+## Tecnologias
 
 - [Bcryptjs](https://www.npmjs.com/package/bcryptjs)
 - [Class Transformer](https://github.com/typestack/class-transformer#readme)
