@@ -29,7 +29,8 @@ export class MessageService {
     state,
     user_name,
   }: CreateMessageDto) {
-    const message = `
+    const message = 
+    `
     Olá ${user_name}.
     \nO sistema notou pessoas infectadas no local *${name}* 
     \nSituado na cidade de *${city}-${state}* \nEndereço: ${address}. 
