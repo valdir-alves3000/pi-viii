@@ -39,10 +39,10 @@ export function Login() {
     <Layout>
       <img
         src="src/assets/virus_mask.jpg"
-        className="rounded-full w-56 mr-16 mt-10 opacity-40 border border-blue-400 lg:w-96"
+        className="rounded-full w-56 mt-10 opacity-40 border border-blue-400 lg:w-96 lg:mr-16"
       />
 
-      <div className="flex flex-col gap-4 items-stretch w-[600px] mt-10 border border-gray-600 p-12 rounded-lg">
+      <div className="w-full flex flex-col gap-4 items-stretch max-w-[600px] mt-10 border border-gray-600 p-12 rounded-lg ">
         <Heading size="lg" className="text-center relative -top-16 bg-blue-800">
           Login
         </Heading>

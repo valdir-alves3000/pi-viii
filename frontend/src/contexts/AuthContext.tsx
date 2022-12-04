@@ -1,6 +1,5 @@
 import { setCookie } from "nookies";
 import { createContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { AuthContextProps, AuthProviderProps } from "../data/@types";
 import { api } from "../services/api";
 
@@ -9,7 +8,6 @@ export const AuthContext = createContext({} as AuthContextProps);
 export function AuthProvider({ children }: AuthProviderProps) {
   const isAuthenticated = false;
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
